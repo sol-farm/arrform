@@ -1,6 +1,6 @@
 [package]
 name = "tulip-arrform"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 license = "MIT OR Apache-2.0"
 description = "tulip fork of arrform"
@@ -10,3 +10,20 @@ description = "tulip fork of arrform"
 
 [dependencies]
 
+[profile.release]
+lto = "fat"
+incremental = false
+codegen-units = 1
+panic = "abort"
+opt-level = 3
+# The build-override table overrides settings for build scripts, proc macros, and their dependencies. 
+# It has the same keys as a normal profile. See the overrides section for more details
+[profile.release.build-override]
+opt-level = 3
+incremental = false
+codegen-units = 1
+# overrides non workspace members
+[profile.release.package."*"]
+opt-level = 3
+incremental = false
+codegen-units = 1

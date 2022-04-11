@@ -76,6 +76,7 @@ pub struct ArrForm<const BUF_SIZE: usize> {
 impl<const BUF_SIZE: usize> ArrForm<BUF_SIZE> {
 
     /// Creates new buffer on the stack
+    #[inline(always)]
     pub fn new() -> Self {
         // We don't need to initialize, because we write before we read
         let buffer: [u8; BUF_SIZE] = unsafe { MaybeUninit::uninit().assume_init() };
@@ -83,6 +84,7 @@ impl<const BUF_SIZE: usize> ArrForm<BUF_SIZE> {
     }
 
     /// Format numbers and strings
+    #[inline(always)]
     pub fn format(&mut self, args: fmt::Arguments) -> fmt::Result {
         self.used = 0;                  // if format is used several times
         fmt::write(self, args)
@@ -95,13 +97,14 @@ impl<const BUF_SIZE: usize> ArrForm<BUF_SIZE> {
     }
 
     /// Get a reference to the result as a slice inside the buffer as bytes
+    #[inline(always)]
     pub fn as_bytes(&self) -> &[u8] {
         &self.buffer[..self.used]
     }
 }
 
 impl<const BUF_SIZE: usize> fmt::Write for ArrForm<BUF_SIZE> {
-
+    #[inline(always)]
     fn write_str(&mut self, s: &str) -> fmt::Result {
         let remaining_buf = &mut self.buffer[self.used..];
         let raw_s = s.as_bytes();
